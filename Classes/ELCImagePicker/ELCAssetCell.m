@@ -9,7 +9,7 @@
 #import "ELCAsset.h"
 #import "ELCConsole.h"
 #import "ELCOverlayImageView.h"
-#import "ELCConstants.h"
+
 #import <Photos/Photos.h>
 
 @interface ELCAssetCell ()
@@ -28,7 +28,7 @@
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
     self = [super initWithStyle:UITableViewCellStyleDefault reuseIdentifier:reuseIdentifier];
-	if (self) {
+    if (self) {
         UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(cellTapped:)];
         [self addGestureRecognizer:tapRecognizer];
         
@@ -40,97 +40,65 @@
         
         self.alignmentLeft = YES;
         self.imageManager = [[PHCachingImageManager alloc] init];
-	}
-	return self;
+    }
+    return self;
 }
 
 - (void)setAssets:(NSArray *)assets
 {
     self.rowAssets = assets;
-	for (UIImageView *view in _imageViewArray) {
+    for (UIImageView *view in _imageViewArray) {
         [view removeFromSuperview];
-	}
+    }
     for (ELCOverlayImageView *view in _overlayViewArray) {
         [view removeFromSuperview];
-	}
+    }
     //set up a pointer here so we don't keep calling [UIImage imageNamed:] if creating overlays
     
-    if(!IS_IOS8){
-        UIImage *overlayImage = nil;
-        for (int i = 0; i < [_rowAssets count]; ++i) {
-
-            ELCAsset *asset = [_rowAssets objectAtIndex:i];
-
-            if (i < [_imageViewArray count]) {
-                UIImageView *imageView = [_imageViewArray objectAtIndex:i];
-                imageView.image = [UIImage imageWithCGImage:((ALAsset*)asset.asset).thumbnail];
-            } else {
-                UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageWithCGImage:((ALAsset*)asset.asset).thumbnail]];
-                [_imageViewArray addObject:imageView];
-            }
+    UIImage *overlayImage = nil;
+    for (int i = 0; i < [_rowAssets count]; ++i) {
+        
+        ELCAsset *asset = [_rowAssets objectAtIndex:i];
+        
+        PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
+        
+        // Download from cloud if necessary
+        // Need to make NO for existing images.
+        options.networkAccessAllowed = YES;
+        options.progressHandler = ^(double progress, NSError *error, BOOL *stop, NSDictionary *info) {
             
-            if (i < [_overlayViewArray count]) {
-                ELCOverlayImageView *overlayView = [_overlayViewArray objectAtIndex:i];
-                overlayView.hidden = asset.selected ? NO : YES;
-                overlayView.labIndex.text = [NSString stringWithFormat:@"%d", asset.index + 1];
-            } else {
-                if (overlayImage == nil) {
-                    overlayImage = [UIImage imageNamed:@"Overlay.png"];
-                }
-                ELCOverlayImageView *overlayView = [[ELCOverlayImageView alloc] initWithImage:overlayImage];
-                [_overlayViewArray addObject:overlayView];
-                overlayView.hidden = asset.selected ? NO : YES;
-                overlayView.labIndex.text = [NSString stringWithFormat:@"%d", asset.index + 1];
-            }
+        };
+        
+        if (i < [_imageViewArray count]) {
+            UIImageView *imageView = [_imageViewArray objectAtIndex:i];
+            PHAsset *phAsset = (PHAsset *)asset.asset;
+            [self.imageManager requestImageForAsset:phAsset targetSize:CGSizeMake(70, 70) contentMode:PHImageContentModeAspectFill options:options resultHandler:^(UIImage * result, NSDictionary * info) {
+                imageView.image = result;
+            }];
+            
+        } else {
+            UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 70, 70)];
+            PHAsset *phAsset = (PHAsset *)asset.asset;
+            [self.imageManager requestImageForAsset:phAsset targetSize:CGSizeMake(70, 70) contentMode:PHImageContentModeAspectFill options:options resultHandler:^(UIImage * result, NSDictionary * info) {
+                imageView.image = result;
+            }];
+            
+            [_imageViewArray addObject:imageView];
         }
-    } else {
-   
-        UIImage *overlayImage = nil;
-        for (int i = 0; i < [_rowAssets count]; ++i) {
-            
-            ELCAsset *asset = [_rowAssets objectAtIndex:i];
-            
-            PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
-            
-            // Download from cloud if necessary
-            // Need to make NO for existing images.
-            options.networkAccessAllowed = YES;
-            options.progressHandler = ^(double progress, NSError *error, BOOL *stop, NSDictionary *info) {
-                
-            };
-            
-            if (i < [_imageViewArray count]) {
-                UIImageView *imageView = [_imageViewArray objectAtIndex:i];
-                PHAsset *phAsset = (PHAsset *)asset.asset;
-                [self.imageManager requestImageForAsset:phAsset targetSize:CGSizeMake(70, 70) contentMode:PHImageContentModeAspectFill options:options resultHandler:^(UIImage * result, NSDictionary * info) {
-                    imageView.image = result;
-                }];
-                
-            } else {
-                UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 70, 70)];
-                PHAsset *phAsset = (PHAsset *)asset.asset;
-                [self.imageManager requestImageForAsset:phAsset targetSize:CGSizeMake(70, 70) contentMode:PHImageContentModeAspectFill options:options resultHandler:^(UIImage * result, NSDictionary * info) {
-                    imageView.image = result;
-                }];
-                
-                [_imageViewArray addObject:imageView];
+        
+        if (i < [_overlayViewArray count]) {
+            ELCOverlayImageView *overlayView = [_overlayViewArray objectAtIndex:i];
+            overlayView.hidden = asset.selected ? NO : YES;
+            overlayView.labIndex.text = [NSString stringWithFormat:@"%d", asset.index + 1];
+        } else {
+            if (overlayImage == nil) {
+                overlayImage = [UIImage imageNamed:@"Overlay.png"];
             }
-            
-            if (i < [_overlayViewArray count]) {
-                ELCOverlayImageView *overlayView = [_overlayViewArray objectAtIndex:i];
-                overlayView.hidden = asset.selected ? NO : YES;
-                overlayView.labIndex.text = [NSString stringWithFormat:@"%d", asset.index + 1];
-            } else {
-                if (overlayImage == nil) {
-                    overlayImage = [UIImage imageNamed:@"Overlay.png"];
-                }
-                ELCOverlayImageView *overlayView = [[ELCOverlayImageView alloc] initWithImage:overlayImage];
-                [_overlayViewArray addObject:overlayView];
-                overlayView.hidden = asset.selected ? NO : YES;
-                overlayView.labIndex.text = [NSString stringWithFormat:@"%d", asset.index + 1];
-            }
+            ELCOverlayImageView *overlayView = [[ELCOverlayImageView alloc] initWithImage:overlayImage];
+            [_overlayViewArray addObject:overlayView];
+            overlayView.hidden = asset.selected ? NO : YES;
+            overlayView.labIndex.text = [NSString stringWithFormat:@"%d", asset.index + 1];
         }
-    
     }
 }
 
@@ -147,9 +115,9 @@
         startX = (self.bounds.size.width - totalWidth) / 2;
     }
     
-	CGRect frame = CGRectMake(startX, 2, 75, 75);
-	
-	for (int i = 0; i < [_rowAssets count]; ++i) {
+    CGRect frame = CGRectMake(startX, 2, 75, 75);
+    
+    for (int i = 0; i < [_rowAssets count]; ++i) {
         if (CGRectContainsPoint(frame, point)) {
             ELCAsset *asset = [_rowAssets objectAtIndex:i];
             asset.selected = !asset.selected;
@@ -183,19 +151,19 @@
         startX = (self.bounds.size.width - totalWidth) / 2;
     }
     
-	CGRect frame = CGRectMake(startX, 2, 75, 75);
-	
-	for (int i = 0; i < [_rowAssets count]; ++i) {
-		UIImageView *imageView = [_imageViewArray objectAtIndex:i];
-		[imageView setFrame:frame];
-		[self addSubview:imageView];
+    CGRect frame = CGRectMake(startX, 2, 75, 75);
+    
+    for (int i = 0; i < [_rowAssets count]; ++i) {
+        UIImageView *imageView = [_imageViewArray objectAtIndex:i];
+        [imageView setFrame:frame];
+        [self addSubview:imageView];
         
         ELCOverlayImageView *overlayView = [_overlayViewArray objectAtIndex:i];
         [overlayView setFrame:frame];
         [self addSubview:overlayView];
-		
-		frame.origin.x = frame.origin.x + frame.size.width + 4;
-	}
+        
+        frame.origin.x = frame.origin.x + frame.size.width + 4;
+    }
 }
 
 
