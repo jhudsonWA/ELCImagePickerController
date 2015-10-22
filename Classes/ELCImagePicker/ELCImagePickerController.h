@@ -19,7 +19,7 @@
  * @param picker
  * @param assets Collection of the selected assets
  */
-- (void)elcImagePickerController:(ELCImagePickerController *)picker didFinishPickingMediaWithInfo:(NSArray *)assets;
+- (void)elcImagePickerController:(ELCImagePickerController *)picker didFinishPickingAssets:(NSArray *)assets;
 
 /**
  * Called when image selection was cancelled, by tapping the 'Cancel' BarButtonItem.

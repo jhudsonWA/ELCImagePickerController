@@ -81,7 +81,7 @@
 
 #pragma mark ELCImagePickerControllerDelegate Methods
 
-- (void)elcImagePickerController:(ELCImagePickerController *)picker didFinishPickingMediaWithInfo:(NSArray *)info
+- (void)elcImagePickerController:(ELCImagePickerController *)picker didFinishPickingAssets:(NSArray *)assets
 {
     [self dismissViewControllerAnimated:YES completion:nil];
     
@@ -92,11 +92,9 @@
     CGRect workingFrame = _scrollView.frame;
     workingFrame.origin.x = 0;
     
-    NSMutableArray *images = [NSMutableArray arrayWithCapacity:[info count]];
+    NSMutableArray *images = [NSMutableArray arrayWithCapacity:[assets count]];
     
-    for (PHAsset *asset in info) {
-        
-        
+    for (PHAsset *asset in assets) {
         
         if (asset.mediaType == PHAssetMediaTypeImage){
             
