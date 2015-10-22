@@ -98,8 +98,8 @@
             [returnArray addObject:elcasset.asset];
     }
     
-	if (_imagePickerDelegate != nil && [_imagePickerDelegate respondsToSelector:@selector(elcImagePickerController:didFinishPickingMediaWithInfo:)]) {
-		[_imagePickerDelegate performSelector:@selector(elcImagePickerController:didFinishPickingMediaWithInfo:) withObject:self withObject:returnArray];
+	if (_imagePickerDelegate != nil && [_imagePickerDelegate respondsToSelector:@selector(elcImagePickerController:didFinishPickingAssets:)]) {
+		[_imagePickerDelegate performSelector:@selector(elcImagePickerController:didFinishPickingAssets:) withObject:self withObject:returnArray];
 	} else {
         [self popToRootViewControllerAnimated:NO];
     }
