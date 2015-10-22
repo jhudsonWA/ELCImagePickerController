@@ -23,10 +23,12 @@ elcPicker.imagePickerDelegate = self;
 [elcPicker release];
 ```
 
-The `ELCImagePickerController` will return the select images back to the `ELCImagePickerControllerDelegate`. The delegate contains methods very similar to the `UIImagePickerControllerDelegate`. Instead of returning one dictionary representing a single image the controller sends back an array of PHAsset for iOS 8, 9 and similarly structured dictionaries for iOS 7,6. The two delegate methods are:
+The `ELCImagePickerController` will return the select images back to the `ELCImagePickerControllerDelegate`. The delegate contains methods very similar to the `UIImagePickerControllerDelegate`. Instead of returning one dictionary representing a single image the controller sends back an array of PHAssets for iOS 8+.
+
+The two delegate methods are:
 
 ```obj-c
-- (void)elcImagePickerController:(ELCImagePickerController *)picker didFinishPickingMediaWithInfo:(NSArray *)info;
+- (void)elcImagePickerController:(ELCImagePickerController *)picker didFinishPickingAssets:(NSArray *)assets;
 - (void)elcImagePickerControllerDidCancel:(ELCImagePickerController *)picker;
 ```
 
