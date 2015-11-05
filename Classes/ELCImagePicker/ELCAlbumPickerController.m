@@ -13,7 +13,6 @@
 
 @interface ELCAlbumPickerController () <PHPhotoLibraryChangeObserver>
 
-@property (nonatomic, strong) ALAssetsLibrary *library;
 @property (strong) PHCachingImageManager *imageManager;
 
 @end
@@ -39,9 +38,6 @@ static CGSize const kAlbumThumbnailSize1 = {70.0f , 70.0f};
 
     NSMutableArray *tempArray = [[NSMutableArray alloc] init];
 	self.assetGroups = tempArray;
-    
-    ALAssetsLibrary *assetLibrary = [[ALAssetsLibrary alloc] init];
-    self.library = assetLibrary;
     
     self.imageManager = [[PHCachingImageManager alloc] init];
 
@@ -118,22 +114,6 @@ static CGSize const kAlbumThumbnailSize1 = {70.0f , 70.0f};
 - (void)selectedAssets:(NSArray*)assets
 {
 	[_parent selectedAssets:assets];
-}
-
-- (ALAssetsFilter *)assetFilter
-{
-    if([self.mediaTypes containsObject:(NSString *)kUTTypeImage] && [self.mediaTypes containsObject:(NSString *)kUTTypeMovie])
-    {
-        return [ALAssetsFilter allAssets];
-    }
-    else if([self.mediaTypes containsObject:(NSString *)kUTTypeMovie])
-    {
-        return [ALAssetsFilter allVideos];
-    }
-    else
-    {
-        return [ALAssetsFilter allPhotos];
-    }
 }
 
 #pragma mark -

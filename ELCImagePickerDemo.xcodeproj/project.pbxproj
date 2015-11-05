@@ -294,7 +294,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = ELCImagePickerDemo_Prefix.pch;
 				INFOPLIST_FILE = "ELCImagePickerDemo-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.burnsidedigital.elcimagepickerdemo;
 				PRODUCT_NAME = ELCImagePickerDemo;
 				PROVISIONING_PROFILE = "";
@@ -313,7 +313,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = ELCImagePickerDemo_Prefix.pch;
 				INFOPLIST_FILE = "ELCImagePickerDemo-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.burnsidedigital.elcimagepickerdemo;
 				PRODUCT_NAME = ELCImagePickerDemo;
 				PROVISIONING_PROFILE = "";

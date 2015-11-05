@@ -13,8 +13,6 @@
 
 @interface ELCImagePickerDemoViewController ()
 
-@property (nonatomic, strong) ALAssetsLibrary *specialLibrary;
-
 @end
 
 @implementation ELCImagePickerDemoViewController
