@@ -58,7 +58,8 @@ static CGSize const kAlbumThumbnailSize1 = {70.0f , 70.0f};
     options.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"creationDate" ascending:NO]];
     PHFetchResult *assetsFetchResult = [PHAsset fetchAssetsWithOptions:options];
     
-    [self.assetGroups addObject:@{@"All Photos":assetsFetchResult}];
+    if (assetsFetchResult != nil)
+        [self.assetGroups addObject:@{@"All Photos":assetsFetchResult}];
     
     
     PHFetchResult *topLevelUserCollections = [PHCollectionList fetchTopLevelUserCollectionsWithOptions:nil];
