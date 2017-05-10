@@ -90,7 +90,7 @@
         [self.elcAssets removeAllObjects];
         
             PHFetchResult *tempFetchResult = (PHFetchResult *)self.assetGroup;
-            for (int k =0; k < tempFetchResult.count; k++) {
+            for (int k = tempFetchResult.count - 1; k >= 0; k--) {
                 PHAsset *asset = tempFetchResult[k];
                 ELCAsset *elcAsset = [[ELCAsset alloc] initWithAsset:asset];
                 [elcAsset setParent:self];
