@@ -16,7 +16,7 @@
 
 /**
  * Called with the picker the images were selected from, as well as an array of the collections assets
- * @param picker Picker 
+ * @param picker The ELC Image Picker Controller object 
  * @param assets Collection of the selected assets
  */
 - (void)elcImagePickerController:(ELCImagePickerController *)picker didFinishPickingAssets:(NSArray *)assets;
